@@ -1,0 +1,57 @@
+﻿<Window x:Class="NoteFlow.Studio.Views.LogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NoteFlow.Studio.Views"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="Microsoft YaHei, SimSun, {materialDesign:MaterialDesignFont}"
+        Title="系统日志" Height="500" Width="800" WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <local:LogLevelToBrushConverter x:Key="LogLevelToBrushConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
+            <Button Content="清空日志" Click="BtnClear_Click" Margin="0,0,10,0" Style="{StaticResource MaterialDesignOutlinedButton}"/>
+            <Button Content="打开本地日志目录" Click="BtnOpenDir_Click" Style="{StaticResource MaterialDesignOutlinedButton}"/>
+        </StackPanel>
+
+        <ListView x:Name="LogListView" Grid.Row="1" Margin="10" ItemsSource="{Binding}" HorizontalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="时间" Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Timestamp, StringFormat='yyyy-MM-dd HH:mm:ss.fff'}" Foreground="{DynamicResource MaterialDesignBody}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="级别" Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Level}" FontWeight="Medium" Foreground="{Binding Level, Converter={StaticResource LogLevelToBrushConverter}}" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="内容" Width="520">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Message, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" MaxHeight="80" VerticalScrollBarVisibility="Auto" BorderThickness="0" Background="Transparent" Foreground="{DynamicResource MaterialDesignBody}" VerticalAlignment="Center" Margin="0,2"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>

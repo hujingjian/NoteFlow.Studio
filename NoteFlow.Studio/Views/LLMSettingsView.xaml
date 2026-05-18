@@ -1,0 +1,93 @@
+﻿<UserControl x:Class="NoteFlow.Studio.Views.LLMSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800" TextElement.Foreground="{DynamicResource MaterialDesignBody}">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="大模型设置" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 左侧模型列表 -->
+            <materialDesign:Card Grid.Column="0" Background="#161923" UniformCornerRadius="8" Margin="0,0,15,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Button Grid.Row="0" x:Name="BtnAddCustom" Content="添加模型提供商" Click="BtnAddCustom_Click" Style="{DynamicResource MaterialDesignRaisedButton}" Background="#414DE5" Foreground="White" Margin="10"/>
+                    
+                    <TextBlock Grid.Row="1" Text="模型列表" Foreground="#8B8F9A" Margin="10,0,10,10" FontSize="12"/>
+
+                    <ListBox Grid.Row="2" x:Name="ProviderListBox" SelectionChanged="ProviderListBox_SelectionChanged" Background="Transparent" BorderThickness="0" Foreground="#E2E2E6" HorizontalContentAlignment="Stretch">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <materialDesign:PackIcon Grid.Column="0" Kind="RobotOutline" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                    <ToggleButton Grid.Column="2" IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" Click="ProviderToggle_Changed"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </materialDesign:Card>
+
+            <!-- 右侧配置区域 -->
+            <materialDesign:Card Grid.Column="1" Background="#161923" UniformCornerRadius="8" Padding="20">
+                <StackPanel x:Name="ConfigPanel" Visibility="Hidden">
+                    <TextBlock x:Name="TxtProviderTitle" Text="设置" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
+
+                    <TextBlock Text="模型名称" Margin="0,5,0,0" Foreground="#8B8F9A"/>
+                    <TextBox x:Name="TxtProviderName" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Margin="0,5,0,15"/>
+
+                    <TextBlock Text="接口地址 (Endpoint)" Margin="0,5,0,0" Foreground="#8B8F9A"/>
+                    <TextBox x:Name="TxtEndpoint" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Margin="0,5,0,15"/>
+
+                    <TextBlock Text="API Key" Margin="0,5,0,0" Foreground="#8B8F9A"/>
+                    <TextBox x:Name="TxtApiKey" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Margin="0,5,0,15"/>
+
+                    <StackPanel x:Name="PanelModelName">
+                        <TextBlock Text="模型名称 (Model)" Margin="0,5,0,0" Foreground="#8B8F9A"/>
+                        <TextBox x:Name="TxtModelName" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Margin="0,5,0,15"/>
+                    </StackPanel>
+
+                    <!-- Ollama 特有配置 -->
+                    <StackPanel x:Name="PanelOllamaConfig" Visibility="Collapsed">
+                        <Button x:Name="BtnTestOllama" Content="测试连通性并获取模型" Style="{DynamicResource MaterialDesignOutlinedButton}" Click="BtnTestOllama_Click" Margin="0,0,0,15" HorizontalAlignment="Left"/>
+                        <TextBlock Text="选择 Ollama 模型" Margin="0,5,0,0" Foreground="#8B8F9A"/>
+                        <ComboBox x:Name="CmbOllamaModels" Style="{DynamicResource MaterialDesignOutlinedComboBox}" Margin="0,5,0,15"/>
+                    </StackPanel>
+
+                    <!-- 删除自定义节点按钮 -->
+                    <Button x:Name="BtnDeleteCustom" Content="删除此模型" Style="{DynamicResource MaterialDesignOutlinedButton}" Foreground="#EF4444" BorderBrush="#EF4444" Click="BtnDeleteCustom_Click" HorizontalAlignment="Left" Margin="0,10,0,0"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                        <Button x:Name="BtnTestConnection" Content="测试连通性" Style="{DynamicResource MaterialDesignOutlinedButton}" Click="BtnTestConnection_Click" Margin="0,0,10,0" Width="120" Foreground="#22C55E"/>
+                        <Button x:Name="BtnSaveProvider" Content="保存此模型配置" Width="150" Style="{DynamicResource MaterialDesignRaisedButton}" Background="#414DE5" Click="BtnSaveProvider_Click"/>
+                    </StackPanel>
+                    <TextBlock x:Name="TxtMessage" Text="" Foreground="#22C55E" HorizontalAlignment="Right" Margin="0,10,0,0" Visibility="Collapsed"/>    
+                </StackPanel>
+            </materialDesign:Card>
+        </Grid>
+    </Grid>
+</UserControl>

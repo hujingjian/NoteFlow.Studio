@@ -1,0 +1,58 @@
+<UserControl x:Class="NoteFlow.Studio.Views.BasicSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800" TextElement.Foreground="{DynamicResource MaterialDesignBody}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
+        <StackPanel Margin="20">
+            <TextBlock Text="基础配置" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
+            
+            <!-- 视频下载地址配置 -->
+            <materialDesign:Card Padding="16" UniformCornerRadius="12" Margin="0,0,0,20" Background="#161923">
+                <StackPanel>
+                    <TextBlock Text="视频下载设置" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <TextBox x:Name="TxtVideoDownloadPath" materialDesign:HintAssist.Hint="视频存储目录" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Margin="0,10"/>
+                </StackPanel>
+            </materialDesign:Card>
+
+            <!-- 工具存放地址配置 -->
+            <materialDesign:Card Padding="16" UniformCornerRadius="12" Margin="0,0,0,20" Background="#161923">
+                <StackPanel>
+                    <TextBlock Text="工具下载设置" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <TextBox x:Name="TxtToolDownloadPath" materialDesign:HintAssist.Hint="工具存储目录 (如 ffmpeg, whisper 模型等)" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Margin="0,10"/>
+                </StackPanel>
+            </materialDesign:Card>
+
+            <!-- Obsidian API 配置 -->
+            <materialDesign:Card Padding="16" UniformCornerRadius="12" Margin="0,0,0,20" Background="#161923">
+                <StackPanel>
+                    <TextBlock Text="Obsidian 连通配置" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <TextBox x:Name="TxtObsidianRootPath" materialDesign:HintAssist.Hint="Obsidian 仓库根目录" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Margin="0,10"/>
+                    <TextBox x:Name="TxtObsidianApi" materialDesign:HintAssist.Hint="Obsidian Local REST API 地址" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Margin="0,10"/>
+                </StackPanel>
+            </materialDesign:Card>
+
+            <!-- AnythingLLM 配置 -->
+            <materialDesign:Card Padding="16" UniformCornerRadius="12" Margin="0,0,0,20" Background="#161923">
+                <StackPanel>
+                    <TextBlock Text="AnythingLLM 配置" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <TextBox x:Name="TxtAnythingLlmApi" materialDesign:HintAssist.Hint="AnythingLLM 接口地址 (例如: http://localhost:3001/api)" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Margin="0,10"/>
+                    <PasswordBox x:Name="TxtAnythingLlmKey" materialDesign:HintAssist.Hint="AnythingLLM API Key" Style="{DynamicResource MaterialDesignOutlinedPasswordBox}" Margin="0,10"/>
+                </StackPanel>
+            </materialDesign:Card>
+            <!-- CLI 启动目录配置 -->
+            <materialDesign:Card Padding="16" UniformCornerRadius="12" Margin="0,0,0,20" Background="#161923">
+                <StackPanel>
+                    <TextBlock Text="CLI 启动配置" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <TextBox x:Name="TxtCliStartupPath" materialDesign:HintAssist.Hint="CLI启动目录" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Margin="0,10"/>
+                </StackPanel>
+            </materialDesign:Card>            
+            <!-- 保存按钮 -->
+            <Button x:Name="BtnSave" Content="保存配置" Width="150" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignRaisedButton}" Background="#414DE5" Click="BtnSave_Click"/>
+            <TextBlock x:Name="TxtMessage" Text="" Foreground="#22C55E" HorizontalAlignment="Right" Margin="0,10,0,0" Visibility="Collapsed"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,212 @@
+<UserControl x:Class="NoteFlow.Studio.Views.AboutMeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1100"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="Microsoft YaHei, SimSun, {materialDesign:MaterialDesignFont}"
+             UseLayoutRounding="True" SnapsToDevicePixels="True"
+             Background="Transparent">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="AppCardBackground" Color="#161923" />
+        <SolidColorBrush x:Key="AppPrimaryAccent" Color="#414DE5" />
+        <SolidColorBrush x:Key="AppTextForeground" Color="#E2E2E6" />
+        <SolidColorBrush x:Key="AppTextMuted" Color="#8B8F9A" />
+    </UserControl.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 标题 -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,30">
+            <TextBlock Text="关于我" FontSize="24" FontWeight="Bold" Foreground="{StaticResource AppTextForeground}"/>
+            <TextBlock Text="一个热爱技术与知识管理的开发者" FontSize="14" Foreground="{StaticResource AppTextMuted}" Margin="0,5,0,0"/>
+        </StackPanel>
+
+        <!-- 内容自适应区 -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <WrapPanel Orientation="Horizontal" ItemWidth="360" Margin="-10">
+                <!-- WrapPanel 子项自适应宽度，但如果要充满宽度，可以使用 UniformGrid 或类似。WrapPanel 设定子项目宽度为固定值即可自动换行 -->
+
+                <!-- Card 1: 个人信息 -->
+                <materialDesign:Card Margin="10" Padding="20" UniformCornerRadius="16" Background="{StaticResource AppCardBackground}" VerticalAlignment="Stretch">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <Ellipse Width="80" Height="80">
+                                <Ellipse.Fill>
+                                    <ImageBrush ImageSource="pack://application:,,,/Resources/Images/profile picture.png" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <StackPanel Margin="15,10,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="老胡AI" FontSize="20" FontWeight="Bold" Foreground="{StaticResource AppTextForeground}"/>
+                                    <Border Background="#2B305B" CornerRadius="4" Margin="10,0,0,0" Padding="6,2" VerticalAlignment="Center">
+                                        <TextBlock Text="开发者" FontSize="12" Foreground="#8C9EFF"/>
+                                    </Border>
+                                </StackPanel>
+                                <TextBlock Text="全栈开发者 / AI工程化实践者&#x0a;.NET 全平台开发 · Python 智能体" FontSize="12" Foreground="{StaticResource AppTextMuted}" Margin="0,10,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="1" Foreground="{StaticResource AppTextForeground}" FontSize="14" TextWrapping="Wrap" Margin="0,20,0,20" LineHeight="24">
+                            热衷于通过 AI 与工程化能力，<LineBreak/>
+                            把复杂的信息处理流程自动化。<LineBreak/>
+                            <LineBreak/>
+                            长期专注于：<LineBreak/>
+                            <LineBreak/>
+                            • .NET 跨平台应用开发<LineBreak/>
+                            • Python AI 智能体与自动化<LineBreak/>
+                            • AI 工作流与AI 工程化落地<LineBreak/>
+                            • 内容生产与效率工具搭建<LineBreak/>
+                            • 工作流自动化<LineBreak/>
+                            <LineBreak/>
+                            希望通过 NoteFlow Studio，<LineBreak/>
+                            帮助更多人把碎片信息沉淀为长期知识资产。
+                        </TextBlock>
+
+                        <WrapPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button Style="{DynamicResource MaterialDesignFlatButton}" Foreground="{StaticResource AppTextMuted}" Margin="5" Click="Github_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Github" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="GitHub" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </WrapPanel>
+                    </Grid>
+                </materialDesign:Card>
+
+                <!-- Card 2: 关于项目 -->
+                <materialDesign:Card Margin="10" Padding="20" UniformCornerRadius="16" Background="{StaticResource AppCardBackground}" VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                            <materialDesign:PackIcon Kind="Domain" Foreground="#8C9EFF" Width="24" Height="24" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <TextBlock Text="关于项目" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AppTextForeground}" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <TextBlock Text="NoteFlow Studio 是一款面向知识管理与内容沉淀的 AI 工具。&#x0a;&#x0a;支持：" Foreground="{StaticResource AppTextMuted}" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,15"/>
+
+                        <StackPanel Margin="0,0,0,10">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <materialDesign:PackIcon Kind="CheckCircle" Foreground="#5C6BC0" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="视频字幕提取与 OCR 识别" Foreground="{StaticResource AppTextForeground}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <materialDesign:PackIcon Kind="CheckCircle" Foreground="#5C6BC0" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="AI 总结与 Markdown 知识生成" Foreground="{StaticResource AppTextForeground}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <materialDesign:PackIcon Kind="CheckCircle" Foreground="#5C6BC0" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="一键归档至 Obsidian" Foreground="{StaticResource AppTextForeground}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <materialDesign:PackIcon Kind="CheckCircle" Foreground="#666666" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="本地知识库与 RAG 构建" Foreground="#8B8F9A" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <materialDesign:PackIcon Kind="CheckCircle" Foreground="#666666" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="工作流自动化处理" Foreground="#8B8F9A" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <TextBlock Text="致力于让信息采集、整理、归档形成完整闭环。" Foreground="{StaticResource AppTextMuted}" FontSize="14" Margin="0,15,0,0" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!-- Card 3: 为什么做这个 -->
+                <materialDesign:Card Margin="10" Padding="20" UniformCornerRadius="16" Background="{StaticResource AppCardBackground}" VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                            <materialDesign:PackIcon Kind="Heart" Foreground="#5C6BC0" Width="24" Height="24" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <TextBlock Text="为什么做这个" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AppTextForeground}" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <TextBlock Foreground="{StaticResource AppTextMuted}" FontSize="14" TextWrapping="Wrap" LineHeight="24">
+                            每天都会接触大量高价值内容：<LineBreak/><LineBreak/>
+                            视频、文章、教程、播客……<LineBreak/><LineBreak/>
+                            但真正有价值的，<LineBreak/>
+                            不是“看过”，而是“沉淀下来”。<LineBreak/><LineBreak/>
+                            于是我开始尝试：<LineBreak/><LineBreak/>
+                            用 AI + 自动化工作流，<LineBreak/>
+                            替代重复的信息整理过程。<LineBreak/><LineBreak/>
+                            希望把更多时间，<LineBreak/>
+                            留给思考、创作与输出。
+                        </TextBlock>
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!-- Card: 技术栈 -->
+                <materialDesign:Card Margin="10" Padding="20" UniformCornerRadius="16" Background="{StaticResource AppCardBackground}" VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                            <materialDesign:PackIcon Kind="CodeBraces" Foreground="#8C9EFF" Width="24" Height="24" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <TextBlock Text="技术栈" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AppTextForeground}" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <TextBlock Foreground="{StaticResource AppTextMuted}" FontSize="14" TextWrapping="Wrap" LineHeight="28">
+                            • .NET / WPF / Avalonia<LineBreak/>
+                            • Python / FastAPI / Playwright<LineBreak/>
+                            • AI Agent / MCP / RAG<LineBreak/>
+                            • Docker / Ollama / Qwen / LangChain<LineBreak/>
+                            • Obsidian / Anything LLM<LineBreak/>
+                            • Electron / TypeScript / Vue<LineBreak/>
+                        </TextBlock>
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!-- Card 4: 联系我 -->
+                <materialDesign:Card Margin="10" Padding="20" UniformCornerRadius="16" Background="{StaticResource AppCardBackground}" VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                            <materialDesign:PackIcon Kind="Teacher" Foreground="#8C9EFF" Width="24" Height="24" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                            <TextBlock Text="联系我" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AppTextForeground}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        
+                        <TextBlock Text="欢迎交流与反馈" Foreground="{StaticResource AppTextMuted}" FontSize="14" Margin="0,0,0,15"/>
+
+                        <!-- QR Code 排列 -->
+                        <StackPanel HorizontalAlignment="Center">
+                            <!-- 微信交流 -->
+                            <StackPanel Margin="5" Background="White" Width="180" Height="200">
+                                <Image Source="pack://application:,,,/Resources/Images/QR Code.png" Width="160" Height="160" Margin="0,10,0,0" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                <TextBlock Text="微信交流" Foreground="Black" FontSize="12" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                            </StackPanel>
+                            
+                            <!-- 跳转 -->
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,0">
+                                <Button Style="{DynamicResource MaterialDesignFlatButton}" Foreground="{StaticResource AppTextMuted}" Margin="10,0" Click="Xiaohongshu_Click">
+                                    <TextBlock Text="小红书主页"/>
+                                </Button>
+                                <Button Style="{DynamicResource MaterialDesignFlatButton}" Foreground="{StaticResource AppTextMuted}" Margin="10,0" Click="Bilibili_Click">
+                                    <TextBlock Text="B站主页"/>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </materialDesign:Card>
+
+            </WrapPanel>
+        </ScrollViewer>
+
+        <!-- 底部版权信息 -->
+        <Grid Grid.Row="2" Margin="0,20,0,0">
+            <TextBlock Text="© 2026 NoteFlow Studio. All rights reserved." Foreground="{StaticResource AppTextMuted}" HorizontalAlignment="Center" FontSize="12"/>
+            <TextBlock Text="v1.0.0" Foreground="{StaticResource AppTextMuted}" HorizontalAlignment="Right" FontSize="12"/>
+        </Grid>
+    </Grid>
+</UserControl>
