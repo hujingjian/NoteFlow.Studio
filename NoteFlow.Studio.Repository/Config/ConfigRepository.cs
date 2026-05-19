@@ -13,7 +13,7 @@ namespace NoteFlow.Studio.Repository.Config
 
         public ConfigRepository()
         {
-            var appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SelfMediaKnowledgeBase");
+            var appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NoteFlow Studio");
             if (!Directory.Exists(appDataPath))
             {
                 Directory.CreateDirectory(appDataPath);

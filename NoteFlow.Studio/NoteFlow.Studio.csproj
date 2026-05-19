@@ -11,6 +11,7 @@
     <!-- CefSharp 需要明确指定平台，不能使用 AnyCPU -->
     <PlatformTarget>x64</PlatformTarget>
     <ApplicationIcon>Resources\Images\logo.ico</ApplicationIcon>
+	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,7 +38,6 @@
     <PackageReference Include="Markdig" Version="1.1.3" />
     <PackageReference Include="MaterialDesignThemes" Version="5.3.1" />
     <PackageReference Include="Microsoft.Playwright" Version="1.59.0" />
-    <PackageReference Include="PaddleOCRSharp" Version="6.1.0" />
     <PackageReference Include="System.Drawing.Common" Version="10.0.7" />
     <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.23.1" />
   </ItemGroup>
@@ -84,6 +84,38 @@
     <ProjectReference Include="..\NoteFlow.Studio.Repository\NoteFlow.Studio.Repository.csproj" />
     <ProjectReference Include="..\NoteFlow.Studio.Service\NoteFlow.Studio.Service.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="OCR\ChineseV3\ch_PP-OCRv3_det_infer\inference.pdiparams">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="OCR\ChineseV3\ch_PP-OCRv3_det_infer\inference.pdiparams.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="OCR\ChineseV3\ch_PP-OCRv3_det_infer\inference.pdmodel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="OCR\ChineseV3\ch_PP-OCRv3_rec_infer\inference.pdiparams">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="OCR\ChineseV3\ch_PP-OCRv3_rec_infer\inference.pdiparams.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="OCR\ChineseV3\ch_PP-OCRv3_rec_infer\inference.pdmodel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="OCR\ChineseV3\ch_ppocr_mobile_v2.0_cls_infer\inference.pdiparams">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="OCR\ChineseV3\ch_ppocr_mobile_v2.0_cls_infer\inference.pdiparams.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="OCR\ChineseV3\ch_ppocr_mobile_v2.0_cls_infer\inference.pdmodel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="OCR\ChineseV3\ppocr_keys_v1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
   <!-- 自动复制支持 H.264 视频播放的自定义 CefSharp DLL 到原生运行目录 -->
   <Target Name="CopyCustomCefDlls" AfterTargets="Build;Publish">
@@ -97,4 +129,19 @@
     <Copy SourceFiles="@(CustomCefFiles)" DestinationFolder="$(OutDir)runtimes\win-x64\native" OverwriteReadOnlyFiles="true" />
   </Target>
 
+	<ItemGroup Condition="'$(Configuration)'=='Release'">
+		<!-- 包含 Whisper EXE 和它的所有依赖 -->
+		<Content Include="..\NoteFlow.Studio.Whisper\bin\Release\net8.0-windows\**\*">
+			<Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)'=='Debug'">
+		<Content Include="..\NoteFlow.Studio.Whisper\bin\Debug\net8.0-windows\**\*">
+			<Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	
 </Project>

@@ -2,7 +2,7 @@
 
 [![.NET](https://img.shields.io/badge/.NET-8.0-blue.svg)](https://dotnet.microsoft.com/)
 [![WPF](https://img.shields.io/badge/UI-WPF-blueviolet)](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/)
-[![License: AGPL 3.0](https://img.shields.io/badge/License-AGPL%203.0-yellow.svg)](https://opensource.org/licenses/AGPL-3.0)
+[![License: MIT](https://img.shields.io/badge/License-AGPL%203.0-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **NoteFlow Studio** 是一个基于 C# WPF 开发的个人桌面端工具。
 
@@ -33,7 +33,7 @@
 
 对于不想配置开发环境的普通用户，可以完全**免安装 Visual Studio** 等繁琐依赖，直接开箱即用：
 
-1. **下载 Release 包**：前往本仓库的 [Releases 页面] 下载最新编译好的免安装压缩包。
+1. **下载 Release 包**：前往本仓库的 [Releases 页面](https://github.com/hujingjian/NoteFlow.Studio/releases) 下载最新编译好的免安装压缩包。
 2. **解压后运行**：解压缩后双击运行主程序 .exe。
 3. **基础配置**：
    - **AI 配置**：在设置页面填写你的 AI 接口地址 (Endpoint) 和密钥 (API Key)。如果你使用的是本地 Ollama，填入对应的本地地址即可；如果你使用第三方 API（如 DeepSeek、通义千问等的 OpenAI 兼容接口），填入对应信息。
@@ -57,5 +57,5 @@
 
 ## 📄 开源许可证
 
-本项目基于 **AGPL 3.0 (GNU Affero General Public License v3.0)** 许可协议开源。
+本项目基于 **MIT** 许可协议开源。
 有关详细的许可条款与信息，请参阅代码库根目录下的 [LICENSE](LICENSE) 文件。

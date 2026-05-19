@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoteFlow.Studio.Repository"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoteFlow.Studio.Service", "NoteFlow.Studio.Service\NoteFlow.Studio.Service.csproj", "{D4AEEC47-3C21-01FC-CA0A-8A0140C7110D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoteFlow.Studio.Whisper", "NoteFlow.Studio.Whisper\NoteFlow.Studio.Whisper.csproj", "{FE7FF692-FC6F-4175-B5D2-421D51C51660}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{D4AEEC47-3C21-01FC-CA0A-8A0140C7110D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4AEEC47-3C21-01FC-CA0A-8A0140C7110D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4AEEC47-3C21-01FC-CA0A-8A0140C7110D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE7FF692-FC6F-4175-B5D2-421D51C51660}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE7FF692-FC6F-4175-B5D2-421D51C51660}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE7FF692-FC6F-4175-B5D2-421D51C51660}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE7FF692-FC6F-4175-B5D2-421D51C51660}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

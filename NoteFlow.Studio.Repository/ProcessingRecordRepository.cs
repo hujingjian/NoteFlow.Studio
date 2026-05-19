@@ -13,7 +13,7 @@ namespace NoteFlow.Studio.Repository
 
         public ProcessingRecordRepository()
         {
-            var appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SelfMediaKnowledgeBase");
+            var appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NoteFlow Studio");
             if (!Directory.Exists(appDataPath))
             {
                 Directory.CreateDirectory(appDataPath);

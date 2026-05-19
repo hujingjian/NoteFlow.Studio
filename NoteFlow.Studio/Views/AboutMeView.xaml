@@ -183,7 +183,7 @@
                         <StackPanel HorizontalAlignment="Center">
                             <!-- 微信交流 -->
                             <StackPanel Margin="5" Background="White" Width="180" Height="200">
-                                <Image Source="pack://application:,,,/Resources/Images/QR Code.png" Width="160" Height="160" Margin="0,10,0,0" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                <Image Source="pack://application:,,,/Resources/Images/QR Code.png" Width="200" Height="200" Margin="0,10,0,0" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
                                 <TextBlock Text="微信交流" Foreground="Black" FontSize="12" HorizontalAlignment="Center" Margin="0,8,0,0"/>
                             </StackPanel>
                             

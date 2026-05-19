@@ -59,7 +59,8 @@ namespace NoteFlow.Studio.Views
             {
                 _isTaskRunning = true;
             }
-            
+
+            _globalCts = new System.Threading.CancellationTokenSource();
             BtnReExtract.IsEnabled = false; // Disable while extracting
             TxtOcrResult.Text = "";
             TxtPureOcrResult.Text = "";
@@ -493,10 +494,17 @@ namespace NoteFlow.Studio.Views
                 }
                 catch (Exception ex)
                 {
-                    AppLogger.Error($"文案提取异常: {ex.Message}", ex);
-                    TxtStep2Desc.Text = "Whisper提取失败";
-                    MessageBox.Show($"文案提取异常: {ex.Message}");
-                    await UpdateRecordStatus(_currentVideoId, "失败");
+                    if (ex is OperationCanceledException || (ex.InnerException != null && ex.InnerException is OperationCanceledException))
+                    {
+                        TxtStep2Desc.Text = "已取消";
+                    }
+                    else
+                    {
+                        AppLogger.Error($"文案提取异常: {ex.Message}", ex);
+                        TxtStep2Desc.Text = "Whisper提取失败";
+                        MessageBox.Show($"文案提取异常: {ex.Message}");
+                        await UpdateRecordStatus(_currentVideoId, "失败");
+                    }
                     return;
                 }
             }

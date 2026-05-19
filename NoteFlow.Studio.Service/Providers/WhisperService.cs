@@ -1,10 +1,12 @@
+using NoteFlow.Studio.Infrastructure.Logging;
+using NoteFlow.Studio.Service.Interfaces;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using NoteFlow.Studio.Service.Interfaces;
-using Whisper.net;
 using Xabe.FFmpeg;
 
 namespace NoteFlow.Studio.Service.Providers
@@ -66,37 +68,76 @@ namespace NoteFlow.Studio.Service.Providers
             if (!File.Exists(wavFilePath))
                 throw new FileNotFoundException($"WAV文件不存在: {wavFilePath}");
 
-            var options = new WhisperFactoryOptions 
+            var whisperExePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NoteFlow.Studio.Whisper.exe");
+            if (!File.Exists(whisperExePath))
             {
-                UseGpu = true // Try to use GPU if available
+                throw new FileNotFoundException($"Whisper可执行文件未找到: {whisperExePath}");
+            }
+
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = whisperExePath,
+                Arguments = $"\"{modelPath}\" \"{wavFilePath}\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                StandardOutputEncoding = Encoding.UTF8
             };
 
-            using var whisperFactory = WhisperFactory.FromPath(modelPath, options);
+            using var process = new Process { StartInfo = processStartInfo };
 
-            var builder = whisperFactory.CreateBuilder()
-                .WithThreads(Environment.ProcessorCount);
-            
-            if (!string.IsNullOrEmpty(language) && language != "auto")
+            using var cancellationTokenRegistration = cancellationToken.Register(() =>
             {
-                builder = builder.WithLanguage(language);
-            }
+                try
+                {
+                    if (!process.HasExited)
+                    {
+                        process.Kill(true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception
+                    AppLogger.Error("Failed to kill Whisper process.", ex);
+                }
+            });
 
-            using var processor = builder.Build();
+            process.Start();
 
-            using var fileStream = File.OpenRead(wavFilePath);
-            
-            await foreach (var segment in processor.ProcessAsync(fileStream, cancellationToken))
+            var reader = process.StandardOutput;
+            while (!reader.EndOfStream)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                
-                string timeRange = $"[{FormatTimeSpan(segment.Start)} -> {FormatTimeSpan(segment.End)}]";
-                string cleanText = segment.Text.Trim();
-                
-                if (!string.IsNullOrWhiteSpace(cleanText))
+                var line = await reader.ReadLineAsync(cancellationToken);
+                if (string.IsNullOrEmpty(line)) continue;
+
+                try
                 {
-                    onSegmentRecognized?.Invoke(timeRange, cleanText);
+                    var segmentData = JsonSerializer.Deserialize<JsonElement>(line);
+                    if (segmentData.TryGetProperty("Error", out var error))
+                    {
+                        throw new Exception($"Whisper process error: {error.GetString()}");
+                    }
+
+                    var startTime = TimeSpan.FromMilliseconds(segmentData.GetProperty("Start").GetInt64());
+                    var endTime = TimeSpan.FromMilliseconds(segmentData.GetProperty("End").GetInt64());
+                    var text = segmentData.GetProperty("Text").GetString();
+
+                    string timeRange = $"[{FormatTimeSpan(startTime)} -> {FormatTimeSpan(endTime)}]";
+                    string cleanText = text?.Trim();
+
+                    if (!string.IsNullOrWhiteSpace(cleanText))
+                    {
+                        onSegmentRecognized?.Invoke(timeRange, cleanText);
+                    }
+                }
+                catch (JsonException ex)
+                {
+                    AppLogger.Error($"Failed to parse segment JSON: {line}", ex);
                 }
             }
+
+            await process.WaitForExitAsync(cancellationToken);
         }
 
         private string FormatTimeSpan(TimeSpan ts)

@@ -701,7 +701,10 @@ namespace NoteFlow.Studio
             AboutMePanel.Visibility = Visibility.Collapsed;
             //切换页面时暂停视频播放，避免资源占用和声音干扰
             PauseVideo();
-            AddKnowledgeBasePanel.VideoPlayer?.MediaPlayer?.Pause();
+            if ((bool)(AddKnowledgeBasePanel.VideoPlayer?.MediaPlayer?.IsPlaying))
+            {
+                AddKnowledgeBasePanel.VideoPlayer?.MediaPlayer?.Pause();
+            }
 
             if (MenuBasicSettings != null && MenuBasicSettings.IsSelected)
             {

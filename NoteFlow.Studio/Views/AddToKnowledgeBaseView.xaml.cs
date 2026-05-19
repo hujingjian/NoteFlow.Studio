@@ -2,7 +2,6 @@
 using LibVLCSharp.WPF;
 using Markdig;
 using Microsoft.Win32;
-using PaddleOCRSharp;
 using NoteFlow.Studio.Model;
 using NoteFlow.Studio.Model.Config;
 using NoteFlow.Studio.Repository.Config;
