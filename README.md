@@ -56,14 +56,14 @@
 ---
 
 ## 📸 截图预览
-![](https://github.com/hujingjian/NoteFlow.Studio/docs/image1.png)
-![](https://github.com/hujingjian/NoteFlow.Studio/docs/image2.png)
-![](https://github.com/hujingjian/NoteFlow.Studio/docs/image3.png)
-![](https://github.com/hujingjian/NoteFlow.Studio/docs/image4.png)
-![](https://github.com/hujingjian/NoteFlow.Studio/docs/image5.png)
-![](https://github.com/hujingjian/NoteFlow.Studio/docs/image6.png)
-![](https://github.com/hujingjian/NoteFlow.Studio/docs/image7.png)
-![](https://github.com/hujingjian/NoteFlow.Studio/docs/image8.png)
+![](docs/image1.png)
+![](docs/image2.png)
+![](docs/image3.png)
+![](docs/image4.png)
+![](docs/image5.png)
+![](docs/image6.png)
+![](docs/image7.png)
+![](docs/image8.png)
 ---
 
 
