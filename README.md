@@ -2,7 +2,7 @@
 
 [![.NET](https://img.shields.io/badge/.NET-8.0-blue.svg)](https://dotnet.microsoft.com/)
 [![WPF](https://img.shields.io/badge/UI-WPF-blueviolet)](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/)
-[![License: MIT](https://img.shields.io/badge/License-AGPL%203.0-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **NoteFlow Studio** 是一个基于 C# WPF 开发的个人桌面端工具。
 
@@ -54,6 +54,18 @@
 4. 按 F5 编译运行即可。
 
 ---
+
+## 📸 截图预览
+[](https://github.com/hujingjian/NoteFlow.Studio/docs/image1)
+[](https://github.com/hujingjian/NoteFlow.Studio/docs/image2)
+[](https://github.com/hujingjian/NoteFlow.Studio/docs/image3)
+[](https://github.com/hujingjian/NoteFlow.Studio/docs/image4)
+[](https://github.com/hujingjian/NoteFlow.Studio/docs/image5)
+[](https://github.com/hujingjian/NoteFlow.Studio/docs/image6)
+[](https://github.com/hujingjian/NoteFlow.Studio/docs/image7)
+[](https://github.com/hujingjian/NoteFlow.Studio/docs/image8)
+---
+
 
 ## 📄 开源许可证
 
