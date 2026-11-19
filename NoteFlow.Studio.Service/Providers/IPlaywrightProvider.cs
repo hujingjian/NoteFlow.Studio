@@ -6,5 +6,6 @@ namespace NoteFlow.Studio.Service.Providers
     public interface IPlaywrightProvider
     {
         Task<IBrowser> GetBrowserAsync();
+        Task<IBrowser> GetHeadedBrowserAsync();
     }
 }

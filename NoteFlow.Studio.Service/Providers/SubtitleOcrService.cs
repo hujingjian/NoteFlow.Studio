@@ -1,4 +1,6 @@
 using NoteFlow.Studio.Infrastructure.Logging;
+using NoteFlow.Studio.Model.Config;
+using NoteFlow.Studio.Repository.Config;
 using OpenCvSharp;
 using OpenCvSharp.Text;
 using Sdcb.PaddleInference;
@@ -218,8 +220,8 @@ namespace NoteFlow.Studio.Service.Providers
                 // Init PaddleOCR
                 List<SubtitleItem> results = new List<SubtitleItem>();
 
-                //var fullModel = GetOcrModel();
-                using var engine = GetOcrRecModel();//new PaddleOcrAll(fullModel, PaddleDevice.Mkldnn());
+                var fullModel = GetOcrModel();
+                using var engine = new PaddleOcrAll(fullModel, PaddleDevice.Mkldnn());
                 //engine.Enable180Classification = true;
 
 
@@ -231,10 +233,16 @@ namespace NoteFlow.Studio.Service.Providers
                     {
                         if (cancellationToken.IsCancellationRequested) break; 
 
-                        Mat img = Cv2.ImRead(imageFiles[i]);
+                        //Mat img = Cv2.ImRead(imageFiles[i]);
                         //PaddleOcrResult result = engine.Run(img);
-                        PaddleOcrRecognizerResult result = engine.Run(img);
-                        var texts = result.Text;
+
+                        engine.Enable180Classification = true;
+                        Mat img = Cv2.ImRead(imageFiles[i]);
+                        PaddleOcrResult result = engine.Run(img);
+                        var texts = result.Regions.Select(t => t.Text);
+
+                        //PaddleOcrRecognizerResult result = engine.Run(img);
+                        //var texts = result.Text;
 
                         string mergedText = string.Join(" ", texts).Trim();
 
@@ -322,17 +330,17 @@ namespace NoteFlow.Studio.Service.Providers
         private FullOcrModel GetOcrModel()
         {
             string baseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OCR");
+            string labelDir = Path.Combine(baseDir, "ChineseV3", "ppocr_keys_v1.txt");
 
             #region v3
 
-            string detDir = Path.Combine(baseDir, "ChineseV3", "ch_PP-OCRv3_det_infer");
-            string recDir = Path.Combine(baseDir, "ChineseV3", "ch_PP-OCRv3_rec_infer");
-            string clsDir = Path.Combine(baseDir, "ChineseV3", "ch_ppocr_mobile_v2.0_cls_infer");
-            string labelDir = Path.Combine(baseDir, "ChineseV3", "ppocr_keys_v1.txt");
+            //string detDir = Path.Combine(baseDir, "ChineseV3", "ch_PP-OCRv3_det_infer");
+            //string recDir = Path.Combine(baseDir, "ChineseV3", "ch_PP-OCRv3_rec_infer");
+            //string clsDir = Path.Combine(baseDir, "ChineseV3", "ch_ppocr_mobile_v2.0_cls_infer");
 
-            var detModel = DetectionModel.FromDirectory(detDir, ModelVersion.V3);
-            var clsModel = ClassificationModel.FromDirectory(clsDir, ModelVersion.V3);
-            var recModel = RecognizationModel.FromDirectory(recDir, labelDir, ModelVersion.V3);
+            //var detModel = DetectionModel.FromDirectory(detDir, ModelVersion.V3);
+            //var recModel = RecognizationModel.FromDirectory(recDir, labelDir, ModelVersion.V3);
+            //var clsModel = ClassificationModel.FromDirectory(clsDir, ModelVersion.V3);
             #endregion
 
             #region v4
@@ -348,15 +356,15 @@ namespace NoteFlow.Studio.Service.Providers
             #endregion
 
             #region v5
-            //string detDir = Path.Combine(baseDir, "ChineseV5", "PP-OCRv5_mobile_det_infer");
-            //string recDir = Path.Combine(baseDir, "ChineseV5", "PP-OCRv5_mobile_rec_infer");
-            //string clsDir = Path.Combine(baseDir, "ChineseV5", "PP-LCNet_x1_0_textline_ori_infer");
-            //string labelDir = Path.Combine(baseDir, "ChineseV5", "ppocr_keys.txt");
+            string detDir = Path.Combine(GetToolDownloadPath(), "paddleocr", "LocalV5", "mobile-zh-det");
+            string recDir = Path.Combine(GetToolDownloadPath(), "paddleocr", "LocalV5", "mobile-zh-rec");
+            string clsDir = Path.Combine(GetToolDownloadPath(), "paddleocr", "Local", "ch_ppocr_mobile_v2.0_cls");
 
-            //var detModel = DetectionModel.FromDirectory(detDir, ModelVersion.V5);
-            //var clsModel = ClassificationModel.FromDirectory(clsDir, ModelVersion.V5);
-            //var recModel = RecognizationModel.FromDirectory(recDir, labelDir, ModelVersion.V5);
+            var detModel = DetectionModel.FromDirectory(detDir, ModelVersion.V5);
+            var recModel = RecognizationModel.FromDirectory(recDir, labelDir, ModelVersion.V5);
+            var clsModel = ClassificationModel.FromDirectory(clsDir, ModelVersion.V5);
             #endregion
+
 
             var fullModel = new FullOcrModel(
                                 detectionModel: detModel,
@@ -366,17 +374,10 @@ namespace NoteFlow.Studio.Service.Providers
 
             return fullModel;
         }
-
-        private PaddleOcrRecognizer GetOcrRecModel()
+        private string GetToolDownloadPath()
         {
-            string baseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OCR");
-            string labelDir = Path.Combine(baseDir, "ChineseV3", "ppocr_keys_v1.txt");
-            string recDir = Path.Combine(baseDir, "ChineseV3", "ch_PP-OCRv3_rec_infer");
-            //string recDir = Path.Combine(baseDir, "ChineseV4", "ch_PP-OCRv4_rec_server_infer");
-            var recModel = RecognizationModel.FromDirectory(recDir, labelDir, ModelVersion.V4);
-            var recognizer = new PaddleOcrRecognizer(recModel);
-
-            return recognizer;
+            var configRepo = new ConfigRepository();
+            return configRepo.GetConfig(AppConfigKeys.ToolDownloadPath, "D:\\Downloads\\Tools");
         }
     }
 }

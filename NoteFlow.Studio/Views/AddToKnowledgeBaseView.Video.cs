@@ -75,6 +75,7 @@ namespace NoteFlow.Studio.Views
 
             if (info != null && !string.IsNullOrEmpty(info.VideoUrl))
             {
+                bool isLocalVideo = File.Exists(info.VideoUrl);
                 string title = info.Title.Replace("\n", "");
                 TxtTitle.Text = string.IsNullOrEmpty(title) ? "加入知识库: " : "加入知识库: " + (title.Length > 50 ? title.Substring(0, 50) + "..." : title);
                 TxtPlatform.Text = info.Platform ?? "未知";
@@ -85,7 +86,7 @@ namespace NoteFlow.Studio.Views
 
                 _pageUrl = info.PageUrl;
                 _cookies = info.Cookies;
-                _onlineVideoUrl = info.VideoUrl;
+                _onlineVideoUrl = isLocalVideo ? string.Empty : info.VideoUrl;
                 _currentVideoId = info.VideoId;
                 _currentVideoPlatform = info.Platform;
 
@@ -97,7 +98,16 @@ namespace NoteFlow.Studio.Views
                 string localFileName = string.IsNullOrEmpty(_currentVideoId) ? "" : $"{_currentVideoId}.mp4";
                 string localPath = string.IsNullOrEmpty(localFileName) ? "" : Path.Combine(downloadDir, localFileName);
 
-                if (!string.IsNullOrEmpty(localPath) && File.Exists(localPath))
+                if (isLocalVideo)
+                {
+                    _currentVideoUrl = info.VideoUrl;
+                    TxtVideoStatus.Text = "本地视频准备就绪。";
+                    TxtStep1Desc.Text = "已下载";
+                    ProgStep1.Value = 100;
+                    IconStep1.Kind = MaterialDesignThemes.Wpf.PackIconKind.CheckCircle;
+                    IconStep1.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(34, 197, 94));
+                }
+                else if (!string.IsNullOrEmpty(localPath) && File.Exists(localPath))
                 {
                     _currentVideoUrl = localPath;
                     TxtVideoStatus.Text = "视频准备就绪（已下载）。";
@@ -119,27 +129,32 @@ namespace NoteFlow.Studio.Views
                 // 检查YouTube字幕
                 await CheckYouTubeSubtitles();
 
-                // Play first stream directly for preview if it's not already playing it
-                bool isAlreadyPlaying = _mediaPlayer.Media != null &&
-                    (Uri.UnescapeDataString(_mediaPlayer.Media.Mrl) == new Uri(_currentVideoUrl).ToString() ||
-                     Uri.UnescapeDataString(_mediaPlayer.Media.Mrl) == new Uri(_onlineVideoUrl).ToString());
-
-                if (!isAlreadyPlaying)
+                bool shouldShowPlayer = isLocalVideo || !_currentVideoUrl.ToLower().Contains("youtube");
+                if (shouldShowPlayer)
                 {
-                    VideoPlayer.MediaPlayer = _mediaPlayer; // 提前将 MediaPlayer 实例绑定到 VideoView
-                    var media = new LibVLCSharp.Shared.Media(_libVLC, new Uri(_currentVideoUrl));
+                    VideoPlayer.MediaPlayer = _mediaPlayer;
+                    VideoPlayer.Visibility = Visibility.Visible;
+                    PanelVideoControls.Visibility = Visibility.Visible;
+                }
+
+                // Play first stream directly for preview if it's not already playing it
+                bool isAlreadyPlaying = IsMediaLoaded(_currentVideoUrl) || IsMediaLoaded(_onlineVideoUrl);
+
+                if (!isAlreadyPlaying && shouldShowPlayer && (!isLocalVideo || File.Exists(_currentVideoUrl)))
+                {
+                    var media = isLocalVideo
+                        ? new LibVLCSharp.Shared.Media(_libVLC, Path.GetFullPath(_currentVideoUrl), FromType.FromPath)
+                        : new LibVLCSharp.Shared.Media(_libVLC, new Uri(_currentVideoUrl));
                     if (_currentVideoUrl.Contains("bilibili") || _currentVideoUrl.Contains("bilivideo") || _currentVideoUrl.Contains("bilivideo.cn"))
                     {
                         media.AddOption(":http-referrer=https://www.bilibili.com");
                         media.AddOption(":http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36");
                     }
-                    if (!_currentVideoUrl.ToLower().Contains("youtube"))
-                    {
-                        _mediaPlayer.Play(media);
-                    }
+                    _mediaPlayer.Play(media);
+                    TxtVideoStatus.Text = isLocalVideo ? "本地视频正在播放。" : "视频准备就绪。";
                 }
 
-                if (_currentVideoUrl.ToLower().Contains("youtube"))
+                if (!isLocalVideo && _currentVideoUrl.ToLower().Contains("youtube"))
                 {
                     VideoPlayer.Visibility = Visibility.Collapsed;
                     PanelVideoControls.Visibility = Visibility.Collapsed;
@@ -163,6 +178,29 @@ namespace NoteFlow.Studio.Views
                 //VideoPlayer.Visibility = Visibility.Collapsed;
                 PanelVideoControls.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private bool IsMediaLoaded(string videoUrl)
+        {
+            if (_mediaPlayer?.Media == null || string.IsNullOrWhiteSpace(videoUrl))
+            {
+                return false;
+            }
+
+            if (File.Exists(videoUrl))
+            {
+                var currentMrl = Uri.UnescapeDataString(_mediaPlayer.Media.Mrl);
+                var fullPath = Path.GetFullPath(videoUrl);
+                var fileUri = new Uri(fullPath).ToString();
+
+                return string.Equals(currentMrl, fullPath, StringComparison.OrdinalIgnoreCase) ||
+                       string.Equals(currentMrl, fileUri, StringComparison.OrdinalIgnoreCase);
+            }
+
+            return string.Equals(
+                Uri.UnescapeDataString(_mediaPlayer.Media.Mrl),
+                videoUrl,
+                StringComparison.OrdinalIgnoreCase);
         }
 
         private async Task CheckYouTubeSubtitles()
@@ -227,6 +265,7 @@ namespace NoteFlow.Studio.Views
             _cookies = null;
             _onlineVideoUrl = "";
             _currentVideoId = "";
+            _currentVideoUrl = "";
             _currentVideoPlatform = "";
             VideoPlayer.Visibility = Visibility.Collapsed;
             VideoPlayer.MediaPlayer = null;
@@ -286,9 +325,51 @@ namespace NoteFlow.Studio.Views
 
         private void VideoPlayer_Unloaded(object sender, RoutedEventArgs e)
         {
-            _mediaPlayer?.Stop();
-            _mediaPlayer?.Dispose();
+            PauseVideoPreview();
+        }
+
+        public void PauseVideoPreview()
+        {
+            if (_mediaPlayer == null) return;
+
+            try
+            {
+                if (_mediaPlayer.IsPlaying)
+                {
+                    _mediaPlayer.Pause();
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+            catch (AccessViolationException)
+            {
+            }
+        }
+
+        public void DisposeVideoResources()
+        {
+            if (_mediaPlayer != null)
+            {
+                _mediaPlayer.PositionChanged -= MediaPlayer_PositionChanged;
+                _mediaPlayer.TimeChanged -= MediaPlayer_TimeChanged;
+                _mediaPlayer.LengthChanged -= MediaPlayer_LengthChanged;
+
+                try
+                {
+                    _mediaPlayer.Stop();
+                }
+                catch (ObjectDisposedException)
+                {
+                }
+
+                VideoPlayer.MediaPlayer = null;
+                _mediaPlayer.Dispose();
+                _mediaPlayer = null;
+            }
+
             _libVLC?.Dispose();
+            _libVLC = null;
         }
 
         private void BtnPlay_Click(object sender, RoutedEventArgs e) => _mediaPlayer.Play();

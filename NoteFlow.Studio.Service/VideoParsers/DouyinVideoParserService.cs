@@ -137,9 +137,102 @@ public class DouyinVideoParserService : IVideoParserService
             }); 
             var maxWaitTime = TimeSpan.FromSeconds(30);
             var startTime = DateTime.Now;
+            bool captchaHandled = false;
             while (string.IsNullOrEmpty(videoInfo.Title) && DateTime.Now - startTime < maxWaitTime)
             {
                 var finalHtml = await page.ContentAsync();
+                // 检测验证码中间页
+                if (!captchaHandled && IsCaptchaPage(finalHtml))
+                {
+                    AppLogger.Warn("检测到抖音验证码页面，正在切换为有头浏览器进行手动验证...");
+                    captchaHandled = true;
+
+                    // 获取当前 cookies
+                    var currentCookies = await contextOptions.CookiesAsync();
+
+                    // 关闭当前无头上下文和页面
+                    await page.CloseAsync();
+                    await contextOptions.CloseAsync();
+
+                    // 启动有头浏览器
+                    var headedBrowser = await _playwrightProvider.GetHeadedBrowserAsync();
+                    var headedContext = await headedBrowser.NewContextAsync(new BrowserNewContextOptions
+                    {
+                        UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                        ViewportSize = new ViewportSize { Width = 1920, Height = 1080 },
+                        Locale = "zh-CN",
+                        TimezoneId = "Asia/Shanghai"
+                    });
+                    // 迁移 cookies
+                    if (currentCookies != null && currentCookies.Count > 0)
+                    {
+                        var mappedCookies = currentCookies.Select(c => new Microsoft.Playwright.Cookie
+                        {
+                            Name = c.Name,
+                            Value = c.Value,
+                            Domain = c.Domain,
+                            Path = c.Path,
+                            Expires = c.Expires,
+                            HttpOnly = c.HttpOnly,
+                            Secure = c.Secure,
+                            SameSite = c.SameSite
+                        }).ToList();
+                        await headedContext.AddCookiesAsync(mappedCookies);
+                    }
+
+                    var headedPage = await headedContext.NewPageAsync();
+
+                    // 重新监听 API 响应
+                    headedPage.RequestFinished += async (sender, request) =>
+                    {
+                        var url = request.Url;
+                        if (url.Contains("aweme/v1/web/aweme/detail/"))
+                        {
+                            try
+                            {
+                                var response = await request.ResponseAsync();
+                                if (request.Failure == null && response != null && response.Status == 200)
+                                {
+                                    string responseBody = await response.TextAsync();
+                                    videoInfo = ParseVideoInfo(request.Url, responseBody).FirstOrDefault();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                AppLogger.Error($"抖音有头浏览器解析异常: {ex.Message}", ex);
+                            }
+                        }
+                    };
+
+                    await headedPage.GotoAsync(targetUrl, new PageGotoOptions
+                    {
+                        WaitUntil = WaitUntilState.Commit,
+                        Timeout = 30000
+                    });
+
+                    // 等待用户手动完成验证，最多等待 3 分钟
+                    AppLogger.Warn("请在弹出的浏览器窗口中完成验证码，程序将在验证通过后自动继续...");
+                    var captchaWaitStart = DateTime.Now;
+                    var captchaMaxWait = TimeSpan.FromMinutes(3);
+                    while (string.IsNullOrEmpty(videoInfo.Title) && DateTime.Now - captchaWaitStart < captchaMaxWait)
+                    {
+                        var headedHtml = await headedPage.ContentAsync();
+                        if (!IsCaptchaPage(headedHtml))
+                        {
+                            AppLogger.Info("验证码已通过，等待数据加载...");
+                        }
+                        await Task.Delay(1000);
+                    }
+
+                    videoInfo.PageUrl = targetUrl;
+
+                    await headedPage.CloseAsync();
+                    await headedContext.CloseAsync();
+                    await headedBrowser.CloseAsync();
+
+                    // 跳出外层 while
+                    break;
+                }
                 await Task.Delay(500); // 每500ms检查一次
             }
             videoInfo.PageUrl = targetUrl;
@@ -150,11 +243,18 @@ public class DouyinVideoParserService : IVideoParserService
         }
         finally
         {
-            await page.CloseAsync();
-            await contextOptions.CloseAsync();
+            try { await page.CloseAsync(); } catch { }
+            try { await contextOptions.CloseAsync(); } catch { }
         }
 
         return videoInfo;
+    }
+
+    private static bool IsCaptchaPage(string html)
+    {
+        if (string.IsNullOrEmpty(html)) return false;
+        return html.Contains("验证码中间页", StringComparison.OrdinalIgnoreCase)
+            || html.Contains("滑块验证", StringComparison.OrdinalIgnoreCase);
     }
 
     public List<VideoInfo> ParseVideoInfo(string url, string json)

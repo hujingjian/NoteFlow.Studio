@@ -32,6 +32,7 @@
 
   <ItemGroup Label="FFmpeg 视频处理">
     <PackageReference Include="CefSharp.Common" Version="126.2.180" />
+    <PackageReference Include="CefSharp.OffScreen" Version="126.2.180" />
     <PackageReference Include="CefSharp.Wpf" Version="126.2.180" />
     <PackageReference Include="CefSharp.Wpf.NETCore" Version="126.2.180" />
     <PackageReference Include="LibVLCSharp.WPF" Version="3.9.7.1" />
@@ -83,6 +84,7 @@
     <ProjectReference Include="..\NoteFlow.Studio.Model\NoteFlow.Studio.Model.csproj" />
     <ProjectReference Include="..\NoteFlow.Studio.Repository\NoteFlow.Studio.Repository.csproj" />
     <ProjectReference Include="..\NoteFlow.Studio.Service\NoteFlow.Studio.Service.csproj" />
+    <ProjectReference Include="..\NoteFlow.Studio.Whisper\NoteFlow.Studio.Whisper.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="OCR\ChineseV3\ch_PP-OCRv3_det_infer\inference.pdiparams">
@@ -117,6 +119,12 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup Condition="Exists('appsettings.local.json')">
+    <Content Include="appsettings.local.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
   <!-- 自动复制支持 H.264 视频播放的自定义 CefSharp DLL 到原生运行目录 -->
   <Target Name="CopyCustomCefDlls" AfterTargets="Build;Publish">
     <ItemGroup>
@@ -142,6 +150,23 @@
 			<Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Remove="..\NoteFlow.Studio.Whisper\bin\Debug\net8.0-windows\Microsoft.Extensions.AI.Abstractions.dll" />
+	  <Content Remove="..\NoteFlow.Studio.Whisper\bin\Debug\net8.0-windows\NoteFlow.Studio.Whisper.deps.json" />
+	  <Content Remove="..\NoteFlow.Studio.Whisper\bin\Debug\net8.0-windows\NoteFlow.Studio.Whisper.dll" />
+	  <Content Remove="..\NoteFlow.Studio.Whisper\bin\Debug\net8.0-windows\NoteFlow.Studio.Whisper.exe" />
+	  <Content Remove="..\NoteFlow.Studio.Whisper\bin\Debug\net8.0-windows\NoteFlow.Studio.Whisper.pdb" />
+	  <Content Remove="..\NoteFlow.Studio.Whisper\bin\Debug\net8.0-windows\NoteFlow.Studio.Whisper.runtimeconfig.json" />
+	  <Content Remove="..\NoteFlow.Studio.Whisper\bin\Debug\net8.0-windows\System.IO.Pipelines.dll" />
+	  <Content Remove="..\NoteFlow.Studio.Whisper\bin\Debug\net8.0-windows\System.Text.Encodings.Web.dll" />
+	  <Content Remove="..\NoteFlow.Studio.Whisper\bin\Debug\net8.0-windows\System.Text.Json.dll" />
+	  <Content Remove="..\NoteFlow.Studio.Whisper\bin\Debug\net8.0-windows\Whisper.net.dll" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="OCR\ChineseV5\" />
 	</ItemGroup>
 	
 </Project>

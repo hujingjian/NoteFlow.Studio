@@ -49,7 +49,7 @@ namespace NoteFlow.Studio.Views
                     MessageBox.Show("还未框选字幕区域");
                     return;
                 }
-                if (string.IsNullOrEmpty(_currentVideoUrl) || !_currentVideoUrl.EndsWith(".mp4"))
+                if (string.IsNullOrEmpty(_currentVideoUrl) || !File.Exists(_currentVideoUrl))
                 {
                     MessageBox.Show("请先下载完视频后再点击重试提取");
                     return;
@@ -82,7 +82,7 @@ namespace NoteFlow.Studio.Views
                 bool skipExtraction = false;
                 if (methodStr == "字幕区域OCR" && (CropRectangle == null || CropRectangle.Width == 0 || CropRectangle.Height == 0))
                 {
-                    if (!string.IsNullOrEmpty(_currentVideoUrl) && _currentVideoUrl.EndsWith(".mp4"))
+                    if (!string.IsNullOrEmpty(_currentVideoUrl) && File.Exists(_currentVideoUrl))
                     {
                         MessageBox.Show("还未框选字幕区域");
                         return;
@@ -107,7 +107,16 @@ namespace NoteFlow.Studio.Views
                 {
                     await UpdateRecordStatus(_currentVideoId, "处理中-视频下载");
 
-                    if (_currentVideoPlatform == "YouTube")
+                    if (_currentVideoPlatform == "本地视频" && File.Exists(_currentVideoUrl))
+                    {
+                        TxtVideoStatus.Text = "本地视频准备就绪。";
+                        TxtStep1Desc.Text = "已下载";
+                        ProgStep1.Value = 100;
+                        IconStep1.Kind = MaterialDesignThemes.Wpf.PackIconKind.CheckCircle;
+                        IconStep1.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(34, 197, 94));
+                        await UpdateRecordStatus(_currentVideoId, "处理中-视频已就绪");
+                    }
+                    else if (_currentVideoPlatform == "YouTube")
                     {
                         if (methodStr != "字幕提取")
                         {

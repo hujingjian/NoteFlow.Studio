@@ -35,8 +35,7 @@ namespace NoteFlow.Studio
         {
             if (App.Current.MainWindow is MainWindow mainWindow && !string.IsNullOrEmpty(url))
             {
-                mainWindow.AddressTextBox.Text = url;
-                mainWindow.BtnGo_Click(null, null);
+                mainWindow.NavigateHomeToUrl(url);
             }
         }
 

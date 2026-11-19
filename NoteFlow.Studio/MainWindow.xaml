@@ -20,14 +20,6 @@
         <WindowChrome CaptionHeight="40" GlassFrameThickness="0" CornerRadius="0" UseAeroCaptionButtons="False" ResizeBorderThickness="5" />
     </WindowChrome.WindowChrome>
 
-    <Window.Resources>
-        <SolidColorBrush x:Key="AppRootBackground" Color="#0E1015" />
-        <SolidColorBrush x:Key="AppCardBackground" Color="#161923" />
-        <SolidColorBrush x:Key="AppPrimaryAccent" Color="#414DE5" />
-        <SolidColorBrush x:Key="AppTextForeground" Color="#E2E2E6" />
-        <SolidColorBrush x:Key="AppTextMuted" Color="#8B8F9A" />
-    </Window.Resources>
-    
     <Grid Background="{StaticResource AppRootBackground}">
         <Grid.Style>
             <Style TargetType="Grid">
@@ -97,6 +89,30 @@
                                 <StackPanel Orientation="Horizontal" Margin="4,2">
                                     <materialDesign:PackIcon Kind="ArchivePlusOutline" VerticalAlignment="Center" />
                                     <TextBlock Text="加入知识库" Margin="12,0,0,0" FontSize="13"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem x:Name="MenuFeishuCapture">
+                                <StackPanel Orientation="Horizontal" Margin="4,2">
+                                    <materialDesign:PackIcon Kind="FileDocumentOutline" VerticalAlignment="Center" />
+                                    <TextBlock Text="网页内容抓取" Margin="12,0,0,0" FontSize="13"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem x:Name="MenuVideoGeneration">
+                                <StackPanel Orientation="Horizontal" Margin="4,2">
+                                    <materialDesign:PackIcon Kind="ArchivePlusOutline" VerticalAlignment="Center" />
+                                    <TextBlock Text="生成Remotion" Margin="12,0,0,0" FontSize="13"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem x:Name="MenuVideoRecreation">
+                                <StackPanel Orientation="Horizontal" Margin="4,2">
+                                    <materialDesign:PackIcon Kind="MovieEditOutline" VerticalAlignment="Center" />
+                                    <TextBlock Text="视频片段复刻" Margin="12,0,0,0" FontSize="13"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem x:Name="MenuRemotionHistory">
+                                <StackPanel Orientation="Horizontal" Margin="4,2">
+                                    <materialDesign:PackIcon Kind="History" VerticalAlignment="Center" />
+                                    <TextBlock Text="Remotion历史记录" Margin="12,0,0,0" FontSize="13"/>
                                 </StackPanel>
                             </ListBoxItem>
                             <!--<ListBoxItem>
@@ -205,251 +221,8 @@
                 </Button>
             </StackPanel>
 
-            <!-- 用一个容器包装不同页面 -->
-            <Grid Grid.Row="0">
-                <Grid x:Name="HomePanel" Visibility="Visible">
-                    <!-- 中间与右侧原有内容 -->
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="1*"/>
-                        </Grid.ColumnDefinitions>
-
-                <!-- 中间内容区 -->
-                <Grid Grid.Column="0" Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="2.5*"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="1*"/>
-                    </Grid.RowDefinitions>
-
-                    <!-- 2. 顶部浏览器相关 -->
-                    <Grid Grid.Row="0" Margin="5,15,5,5" WindowChrome.IsHitTestVisibleInChrome="True">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        
-                        <!-- Tab 页签区 -->
-                        <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled" Margin="5,0,0,0">
-                            <StackPanel x:Name="TabHeaderPanel" Orientation="Horizontal">
-                                <!-- Tabs 将通过代码动态生成在这里 -->
-                                
-                                <!-- 新建标签页按钮 -->
-                                <Button x:Name="BtnNewTab" Click="BtnNewTab_Click" Style="{DynamicResource MaterialDesignIconButton}" Background="Transparent" Foreground="{StaticResource AppTextMuted}" Height="30" Width="30" Margin="5,0,0,0" ToolTip="新建标签页">
-                                    <materialDesign:PackIcon Kind="Plus" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                </Button>
-                            </StackPanel>
-                        </ScrollViewer>
-
-                        <!-- 地址栏与操作区 -->
-                        <materialDesign:Card Grid.Row="1" Padding="4" UniformCornerRadius="8" Background="{StaticResource AppCardBackground}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Orientation="Horizontal">
-                                    <Button Style="{DynamicResource MaterialDesignIconButton}" Width="32" Height="32" Foreground="{StaticResource AppTextForeground}">
-                                        <materialDesign:PackIcon Kind="ArrowLeft" />
-                                    </Button>
-                                    <Button Style="{DynamicResource MaterialDesignIconButton}" Width="32" Height="32" Foreground="{StaticResource AppTextForeground}">
-                                        <materialDesign:PackIcon Kind="ArrowRight" />
-                                    </Button>
-                                    <Button x:Name="BtnRefresh" Click="BtnRefresh_Click" Style="{DynamicResource MaterialDesignIconButton}" Width="32" Height="32" Foreground="{StaticResource AppTextForeground}">
-                                        <materialDesign:PackIcon Kind="Refresh" />
-                                    </Button>
-                                </StackPanel>
-
-                                <TextBox x:Name="AddressTextBox" Grid.Column="1" KeyDown="AddressTextBox_KeyDown" materialDesign:HintAssist.Hint="输入地址或搜索内容..." materialDesign:HintAssist.IsFloating="False" materialDesign:TextFieldAssist.TextFieldCornerRadius="14" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Margin="10,0" Foreground="{StaticResource AppTextForeground}" Height="32" Background="#141526" BorderThickness="0" Padding="15,0" VerticalContentAlignment="Center"/>
-                                
-                                <Button x:Name="BtnGo" Grid.Column="2" Click="BtnGo_Click" Style="{DynamicResource MaterialDesignIconButton}" Width="32" Height="32" Background="{StaticResource AppPrimaryAccent}" Foreground="White" Margin="0,0,10,0" ToolTip="前往">
-                                    <materialDesign:PackIcon Kind="ArrowRightThick" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                </Button>
-
-                                <StackPanel Grid.Column="3" Orientation="Horizontal">
-                                    <Button x:Name="BtnDouyin" Style="{DynamicResource MaterialDesignFlatButton}" Height="32" Margin="5,0,0,0" Foreground="{StaticResource AppTextForeground}">
-                                        <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="MusicNote" Foreground="#FE2C55" Margin="0,0,5,0"/><TextBlock Text="抖音" VerticalAlignment="Center"/></StackPanel>
-                                    </Button>
-                                    <Button x:Name="BtnBilibili" Style="{DynamicResource MaterialDesignFlatButton}" Height="32" Margin="5,0,0,0" Foreground="{StaticResource AppTextForeground}">
-                                        <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="TelevisionStop" Foreground="#00A1D6" Margin="0,0,5,0"/><TextBlock Text="B站" VerticalAlignment="Center"/></StackPanel>
-                                    </Button>
-                                    <Button x:Name="BtnYoutube" Style="{DynamicResource MaterialDesignFlatButton}" Height="32" Margin="5,0,0,0" Foreground="{StaticResource AppTextForeground}">
-                                        <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="Youtube" Foreground="#FF0000" Margin="0,0,5,0"/><TextBlock Text="YouTube" VerticalAlignment="Center"/></StackPanel>
-                                    </Button>
-                                    <Button Style="{DynamicResource MaterialDesignFlatButton}" Height="32" Margin="5,0" Foreground="{StaticResource AppTextForeground}">
-                                        <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="MapOutline" Foreground="#0078FF" Margin="0,0,5,0"/><TextBlock Text="更多" VerticalAlignment="Center"/></StackPanel>
-                                    </Button>
-                                </StackPanel>
-                            </Grid>
-                        </materialDesign:Card>
-                    </Grid>
-
-                    <materialDesign:Card Grid.Row="1" Margin="5" UniformCornerRadius="12" Background="{StaticResource AppCardBackground}">
-                        <Grid>
-                            <!-- CefSharp 浏览器容器 -->
-                            <Grid x:Name="BrowserContainer">
-                                <!-- 浏览器实例通过代码挂载到此容器中 -->
-                            </Grid>
-                        </Grid>
-                    </materialDesign:Card>
-
-                    <TextBlock Grid.Row="2" Text="处理中心" FontSize="16" Foreground="{StaticResource AppTextForeground}" FontFamily="Microsoft YaHei" FontWeight="Bold" Margin="10,15,10,10" />
-
-                    <!-- 3. 中间下边是处理中心列表 -->
-                    <materialDesign:Card Grid.Row="3" Margin="5" Padding="5" UniformCornerRadius="12" Background="{StaticResource AppCardBackground}">
-                        <DataGrid ItemsSource="{Binding ProcessingRecords}" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column" GridLinesVisibility="None" Background="Transparent" BorderThickness="0" RowBackground="Transparent" Foreground="{StaticResource AppTextForeground}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                            <DataGrid.Resources>
-                                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
-                                    <Setter Property="Foreground" Value="{StaticResource AppTextMuted}"/>
-                                    <Setter Property="Background" Value="Transparent"/>
-                                </Style>
-                                <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
-                                    <Setter Property="BorderThickness" Value="0" />
-                                    <Setter Property="Padding" Value="8" />
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type DataGridCell}">
-                                                <Border Padding="{TemplateBinding Padding}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
-                                                    <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
-                                            <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.Resources>
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Header="标题" Width="*">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <Image Width="80" Height="45" Source="{Binding CoverUrl}" Margin="0,0,10,0" VerticalAlignment="Center" >
-                                                    <Image.InputBindings>
-                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.OpenVideoUrlCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="{Binding VideoUrl}"/>
-                                                    </Image.InputBindings>
-                                                </Image>
-                                                <TextBlock Text="{Binding Title}" TextWrapping="Wrap" VerticalAlignment="Center">
-                                                     <TextBlock.InputBindings>
-                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.OpenVideoUrlCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="{Binding VideoUrl}"/>
-                                                    </TextBlock.InputBindings>
-                                                </TextBlock>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="状态" Binding="{Binding Status}" Width="100"/>
-                                <DataGridTextColumn Header="处理时间" Binding="{Binding ProcessingStartTime, StringFormat='yyyy-MM-dd HH:mm'}" Width="150"/>
-                                <DataGridTemplateColumn Header="操作" Width="80">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Button Content="删除" Click="DeleteRecord_Click" Style="{StaticResource MaterialDesignFlatButton}" Foreground="Red" Padding="5,0"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </materialDesign:Card>
-                </Grid>
-
-                <!-- 右侧内容区 -->
-                <Grid Grid.Column="1" Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <!-- 4. 右侧顶部是视频信息与视频操作 -->
-                    <materialDesign:Card Grid.Row="0" Padding="16,16,16,16" Margin="5,25,5,5" UniformCornerRadius="12" Background="{StaticResource AppCardBackground}">
-                        <StackPanel>
-                            <TextBlock Text="视频信息" FontSize="16" Foreground="{StaticResource AppTextForeground}" FontFamily="Microsoft YaHei" FontWeight="Bold" Margin="0,0,0,10"/>
-                            <TextBlock x:Name="TxtVideoTitle" Text="暂无视频标题" TextWrapping="Wrap" Foreground="{StaticResource AppTextForeground}" FontSize="14"/>
-                            <TextBlock x:Name="TxtVideoAuthor" Text="UP: 暂无" Foreground="{StaticResource AppTextMuted}" FontSize="12" Margin="0,10,0,0"/>
-                            <TextBlock x:Name="TxtVideoTime" Text="发布时间: 暂无" Foreground="{StaticResource AppTextMuted}" Margin="0,2,0,0" FontSize="12"/>
-                            <TextBlock x:Name="TxtVideoStats" Text="播放: 暂无" Foreground="{StaticResource AppTextMuted}" Margin="0,2,0,0" FontSize="12"/>
-                            
-                            <Expander IsExpanded="True" Foreground="{StaticResource AppTextMuted}" Background="Transparent">
-                                <Expander.Header>
-                                            <TextBlock Text="视频描述" Margin="-25,0,0,0" FontSize="12" FontWeight="Bold"/>
-                                </Expander.Header>
-                                <ScrollViewer MaxHeight="150" VerticalScrollBarVisibility="Auto">
-                                    <TextBlock x:Name="TxtVideoDesc" Text="操作浏览器来获取视频内容..." Foreground="{StaticResource AppTextMuted}" TextWrapping="Wrap" Margin="0,0,10,0" FontSize="12" />
-                                </ScrollViewer>
-                            </Expander>
-                            
-                            <TextBlock Text="操作" FontSize="16" Foreground="{StaticResource AppTextForeground}" FontFamily="Microsoft YaHei" FontWeight="Bold" Margin="0,20,0,10"/>
-                            <Button x:Name="BtnAddToRepo" IsEnabled="False" Content="加入知识库" Click="BtnAddToRepo_Click" Style="{DynamicResource MaterialDesignRaisedButton}" Background="{StaticResource AppPrimaryAccent}" BorderBrush="Transparent" Foreground="White" materialDesign:ButtonAssist.CornerRadius="6" HorizontalAlignment="Stretch" Margin="0,5"/>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <!--<Button x:Name="BtnDownloadVideo" Grid.Column="0" Style="{DynamicResource MaterialDesignOutlinedButton}" BorderBrush="#3A3A49" Foreground="{StaticResource AppTextForeground}" materialDesign:ButtonAssist.CornerRadius="6" Margin="0,5,5,5">
-                                    <Button.Content>
-                                        <StackPanel Orientation="Horizontal">
-                                            <materialDesign:PackIcon Kind="DownloadOutline" Margin="0,0,5,0" />
-                                            <TextBlock Text="下载视频" />
-                                        </StackPanel>
-                                    </Button.Content>
-                                </Button>
-                                <Button Grid.Column="1" Style="{DynamicResource MaterialDesignOutlinedButton}" BorderBrush="#3A3A49" Foreground="{StaticResource AppTextForeground}" materialDesign:ButtonAssist.CornerRadius="6" Margin="5,5,0,5">
-                                    <Button.Content>
-                                        <StackPanel Orientation="Horizontal">
-                                            <materialDesign:PackIcon Kind="FileDocumentOutline" Margin="0,0,5,0" />
-                                            <TextBlock Text="提取文案" />
-                                        </StackPanel>
-                                    </Button.Content>
-                                </Button>-->
-                            </Grid>
-                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Button Grid.Column="0" Content="收藏" Style="{DynamicResource MaterialDesignOutlinedButton}" HorizontalAlignment="Stretch" Margin="0,5,2,5"/>
-                                <Button Grid.Column="1" Content="分享" Style="{DynamicResource MaterialDesignOutlinedButton}" HorizontalAlignment="Stretch" Margin="2,5,0,5"/>
-                            </Grid>
-                        </StackPanel>
-                    </materialDesign:Card>
-
-                    <!-- 5. 右侧下部是AI智能助手 -->
-                    <materialDesign:Card Grid.Row="1" Padding="16" Margin="5" UniformCornerRadius="12" Background="{StaticResource AppCardBackground}">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0" Margin="0,0,0,10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="AI 智能助手 (CLI终端)" FontSize="16" Foreground="{StaticResource AppTextForeground}" FontFamily="Microsoft YaHei" FontWeight="Bold" />
-                                <Button Grid.Column="1" x:Name="BtnStartCli" Content="启动Claude" Padding="5,0" Height="25" Click="BtnStartCli_Click" />
-                            </Grid>
-                            
-                            <!-- 原生终端嵌入载体 -->
-                            <WindowsFormsHost x:Name="TerminalHost" Grid.Row="1" />
-                        </Grid>
-                    </materialDesign:Card>
-                </Grid>
-            </Grid>
-                </Grid>
-            </Grid>
-            
-            <views:BasicSettingsView x:Name="BasicSettingsPanel" Grid.Row="0" Visibility="Collapsed"/>
-            <views:LLMSettingsView x:Name="LLMSettingsPanel" Grid.Row="0" Visibility="Collapsed"/>
-            <views:AddToKnowledgeBaseView x:Name="AddKnowledgeBasePanel" Grid.Row="0" Visibility="Collapsed"/>
-            <views:AboutMeView x:Name="AboutMePanel" Grid.Row="0" Visibility="Collapsed"/>
+            <!-- 页面承载区 -->
+            <ContentControl x:Name="PageHost" Grid.Row="0" />
 
             <!-- 6. 最下方statusbar -->
             <StatusBar Grid.Row="1" DockPanel.Dock="Bottom" Background="#0E1015" Foreground="{StaticResource AppRootBackground}" BorderThickness="0,1,0,0" BorderBrush="#0E1015">
@@ -497,6 +270,7 @@
         </Grid>
     </Grid>
 </Window>
+
 
 
 

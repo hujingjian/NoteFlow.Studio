@@ -1,0 +1,73 @@
+<UserControl x:Class="NoteFlow.Studio.Views.FeishuArticleCaptureView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" Margin="0,0,8,0">
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+            <materialDesign:Card Grid.Row="0" Padding="6" Margin="0,15,0,10" Background="{StaticResource AppCardBackground}"
+                                 VerticalAlignment="Top">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="TxtUrl" Height="34" VerticalAlignment="Center" Padding="12,0" VerticalContentAlignment="Center"
+                             materialDesign:HintAssist.Hint="粘贴网页链接" Style="{DynamicResource MaterialDesignOutlinedTextBox}"
+                             KeyDown="TxtUrl_KeyDown"/>
+                    <Button x:Name="BtnOpen" Grid.Column="1" Width="38" Height="34" VerticalAlignment="Center" Margin="6,0,0,0"
+                            Click="BtnOpen_Click" Style="{DynamicResource MaterialDesignIconButton}" ToolTip="打开链接">
+                        <materialDesign:PackIcon Kind="ArrowRightThick"/>
+                    </Button>
+                    <Button x:Name="BtnExtract" Grid.Column="2" Height="34" VerticalAlignment="Center" Margin="6,0,0,0" Padding="14,0"
+                            Click="BtnExtract_Click" Style="{DynamicResource MaterialDesignRaisedButton}"
+                            Background="{StaticResource AppPrimaryAccent}" Foreground="White" Content="提取当前页面"/>
+                    <Button x:Name="BtnCopySelection" Grid.Column="3" Height="34" VerticalAlignment="Center" Margin="6,0,0,0" Padding="12,0"
+                            Click="BtnCopySelection_Click" Style="{DynamicResource MaterialDesignOutlinedButton}"
+                            BorderBrush="{StaticResource AppPrimaryAccent}" Foreground="{StaticResource AppTextForeground}"
+                            Content="复制选中内容"/>
+                </Grid>
+            </materialDesign:Card>
+            <materialDesign:Card Grid.Row="1" Background="{StaticResource AppCardBackground}">
+                <Grid x:Name="BrowserHost"/>
+            </materialDesign:Card>
+        </Grid>
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" Margin="8,0,0,0">
+            <StackPanel>
+                <TextBlock Text="Obsidian 归档" FontSize="18" FontWeight="Bold" Foreground="{StaticResource AppTextForeground}" Margin="5,15,5,14"/>
+                <materialDesign:Card Padding="14" Margin="0,0,0,10" Background="{StaticResource AppCardBackground}">
+                    <StackPanel>
+                        <TextBlock Text="目标知识库" Foreground="{StaticResource AppTextMuted}" Margin="0,0,0,5"/>
+                        <ComboBox x:Name="CmbKnowledgeBase" Style="{DynamicResource MaterialDesignOutlinedComboBox}" Margin="0,0,0,12"/>
+                        <TextBox x:Name="TxtStorageLocation" materialDesign:HintAssist.Hint="存储文件夹" Style="{DynamicResource MaterialDesignOutlinedTextBox}" Margin="0,0,0,12"/>
+                        <TextBox x:Name="TxtFileName" materialDesign:HintAssist.Hint="文件名" Style="{DynamicResource MaterialDesignOutlinedTextBox}"/>
+                    </StackPanel>
+                </materialDesign:Card>
+                <materialDesign:Card Padding="14" Background="{StaticResource AppCardBackground}">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,8">
+                            <TextBlock Text="Markdown 内容" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource AppTextForeground}"/>
+                            <TextBlock x:Name="TxtStatus" HorizontalAlignment="Right" Foreground="{StaticResource AppTextMuted}" FontSize="12"/>
+                        </Grid>
+                        <TextBox x:Name="TxtMarkdown" MinHeight="360" AcceptsReturn="True" TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Auto" Style="{DynamicResource MaterialDesignOutlinedTextBox}"
+                                 Padding="10" TextChanged="TxtMarkdown_TextChanged"/>
+                        <Button x:Name="BtnArchive" Height="38" Margin="0,12,0,0" Click="BtnArchive_Click"
+                                IsEnabled="False" Style="{DynamicResource MaterialDesignRaisedButton}"
+                                Background="{StaticResource AppPrimaryAccent}" Foreground="White" Content="归档到 Obsidian"/>
+                    </StackPanel>
+                </materialDesign:Card>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

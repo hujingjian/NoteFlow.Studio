@@ -10,6 +10,13 @@
                 <materialDesign:BundledTheme BaseTheme="Dark" PrimaryColor="DeepPurple" SecondaryColor="Lime" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <SolidColorBrush x:Key="AppRootBackground" Color="#0E1015" />
+            <SolidColorBrush x:Key="AppCardBackground" Color="#161923" />
+            <SolidColorBrush x:Key="AppPrimaryAccent" Color="#414DE5" />
+            <SolidColorBrush x:Key="AppTextForeground" Color="#E2E2E6" />
+            <SolidColorBrush x:Key="AppTextMuted" Color="#8B8F9A" />
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

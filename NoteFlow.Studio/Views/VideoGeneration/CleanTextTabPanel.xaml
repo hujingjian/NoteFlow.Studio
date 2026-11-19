@@ -1,0 +1,119 @@
+<UserControl x:Class="NoteFlow.Studio.Views.VideoGeneration.CleanTextTabPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1400">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1.2*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- 左侧区域 -->
+        <Grid Grid.Column="0" Margin="20,10,10,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="0,0,10,0">
+                <StackPanel>
+                    <!-- 1. 选择原文来源 -->
+                    <StackPanel>
+                        <Grid Margin="0,0,0,10">
+                            <TextBlock Text="1. 选择原文来源" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource AppTextForeground}" VerticalAlignment="Center"/>
+                            <Button x:Name="BtnNewRemotion" Content="新建" Click="BtnNewRemotion_Click" Style="{DynamicResource MaterialDesignOutlinedButton}" HorizontalAlignment="Right" Padding="12,0" Height="28"/>
+                        </Grid>
+                        <Button x:Name="BtnSelectFile" Content="导入本地文件..." Click="BtnSelectFile_Click" Style="{DynamicResource MaterialDesignOutlinedButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Foreground="{StaticResource AppTextMuted}"/>
+                        <TextBox x:Name="TxtOriginalContent" Margin="0,10,0,0" Height="150" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Style="{DynamicResource MaterialDesignOutlinedTextBox}" VerticalContentAlignment="Top"/>
+                    </StackPanel>
+
+                    <!-- 2. 选择清洗提示词 (内置) -->
+                    <StackPanel Margin="0,20,0,0">
+                        <TextBlock Text="2. 选择清洗提示词 (内置)" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource AppTextForeground}" Margin="0,0,0,10"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <ComboBox x:Name="CmbPrompts" SelectionChanged="CmbPrompts_SelectionChanged" DisplayMemberPath="Title" Style="{DynamicResource MaterialDesignOutlinedComboBox}" materialDesign:HintAssist.Hint="选择一个预设提示词"/>
+                            <TextBox x:Name="TxtPromptTitle" Visibility="Collapsed" Style="{DynamicResource MaterialDesignOutlinedTextBox}" materialDesign:HintAssist.Hint="输入提示词标题..."/>
+                            
+                            <StackPanel x:Name="StkActionButtons" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
+                                <Button x:Name="BtnAddPrompt" Click="BtnAddPrompt_Click" Style="{StaticResource MaterialDesignToolButton}" ToolTip="新增"><materialDesign:PackIcon Kind="Add"/></Button>
+                                <Button x:Name="BtnEditPrompt" Click="BtnEditPrompt_Click" Style="{StaticResource MaterialDesignToolButton}" ToolTip="编辑并替换当前内容"><materialDesign:PackIcon Kind="Pencil"/></Button>
+                                <Button x:Name="BtnDeletePrompt" Click="BtnDeletePrompt_Click" Style="{StaticResource MaterialDesignToolButton}" ToolTip="删除"><materialDesign:PackIcon Kind="Delete"/></Button>
+                            </StackPanel>
+
+                            <StackPanel x:Name="StkEditButtons" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0" Visibility="Collapsed">
+                                <Button x:Name="BtnSavePrompt" Click="BtnSavePrompt_Click" Style="{StaticResource MaterialDesignToolButton}" ToolTip="保存" Foreground="LimeGreen"><materialDesign:PackIcon Kind="Check"/></Button>
+                                <Button x:Name="BtnCancelPrompt" Click="BtnCancelPrompt_Click" Style="{StaticResource MaterialDesignToolButton}" ToolTip="取消" Foreground="IndianRed"><materialDesign:PackIcon Kind="Close"/></Button>
+                            </StackPanel>
+                        </Grid>
+
+                        <Border Background="#1C1F2B" CornerRadius="6" Padding="10" Margin="0,10,0,0" BorderBrush="#2D3243" BorderThickness="1">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <materialDesign:PackIcon Kind="InformationOutline" Foreground="{StaticResource AppPrimaryAccent}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="提示词说明" Foreground="{StaticResource AppPrimaryAccent}" FontWeight="SemiBold" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <TextBox x:Name="TxtFullPrompt" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="150" Style="{DynamicResource MaterialDesignTextBox}" BorderThickness="0" Background="Transparent" Foreground="{StaticResource AppTextForeground}" VerticalContentAlignment="Top" materialDesign:HintAssist.Hint="最终用于清洗的完整提示词..."/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- 3. 清洗选项 -->
+                    <StackPanel Margin="0,20,0,10">
+                        <TextBlock Text="3. 清洗选项" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource AppTextForeground}" Margin="0,0,0,10"/>
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <CheckBox x:Name="ChkOpt1" Content="保留时间戳" Checked="PromptOption_Checked" Unchecked="PromptOption_Unchecked" Foreground="{StaticResource AppTextForeground}"/>
+                                <CheckBox x:Name="ChkOpt2" Content="保留停顿标记" Margin="0,8,0,0" Checked="PromptOption_Checked" Unchecked="PromptOption_Unchecked" Foreground="{StaticResource AppTextForeground}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <CheckBox x:Name="ChkOpt3" Content="保留说话人标识" Checked="PromptOption_Checked" Unchecked="PromptOption_Unchecked" Foreground="{StaticResource AppTextForeground}"/>
+                                <CheckBox x:Name="ChkOpt4" Content="输出 Markdown 格式" Margin="0,8,0,0" Checked="PromptOption_Checked" Unchecked="PromptOption_Unchecked" Foreground="{StaticResource AppTextForeground}"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+
+            <Button Grid.Row="1" x:Name="BtnStartClean" Click="BtnStartClean_Click" Style="{DynamicResource MaterialDesignRaisedButton}" Background="{StaticResource AppPrimaryAccent}" Height="40" materialDesign:ButtonAssist.CornerRadius="6" VerticalAlignment="Bottom" Margin="0,10,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="AutoFix" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Text="开始清洗文案" VerticalAlignment="Center" FontWeight="Bold"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <!-- 右侧区域 -->
+        <Grid Grid.Column="1" Margin="10,10,20,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Text="5. 清洗结果预览" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource AppTextForeground}" Margin="0,0,0,10"/>
+            
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+                <Button x:Name="BtnReadClipboard" Content="从剪贴板读取" Click="BtnReadClipboard_Click" Style="{DynamicResource MaterialDesignOutlinedButton}" Margin="0,0,5,0" Padding="10,0" Height="28"/>
+                <Button Content="导出 Markdown" Style="{DynamicResource MaterialDesignOutlinedButton}" Margin="0,0,5,0" Padding="10,0" Height="28"/>
+            </StackPanel>
+            
+            <TextBox Grid.Row="2" x:Name="TxtCleanedResult" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Style="{DynamicResource MaterialDesignOutlinedTextBox}" VerticalContentAlignment="Top" Background="#161923" Foreground="{StaticResource AppTextForeground}"/>
+            
+            <Button Grid.Row="3" x:Name="BtnGoToScript" Content="下一步：生成分镜与脚本" Click="BtnGoToScript_Click" Style="{DynamicResource MaterialDesignRaisedButton}" Background="{StaticResource AppPrimaryAccent}" Margin="0,15,0,0" Height="40" materialDesign:ButtonAssist.CornerRadius="6"/>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -8,6 +8,7 @@ namespace NoteFlow.Studio.Service.Providers
     {
         private static IPlaywright? _playwright;
         private static IBrowser? _browser;
+        private static IBrowser? _headedBrowser;
         private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
         public async Task<IBrowser> GetBrowserAsync()
@@ -47,6 +48,36 @@ namespace NoteFlow.Studio.Service.Providers
                 });
 
                 return _browser;
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
+        }
+
+        public async Task<IBrowser> GetHeadedBrowserAsync()
+        {
+            await _semaphore.WaitAsync();
+            try
+            {
+                // 每次都创建新的有头浏览器实例，用完后调用方负责关闭
+                _playwright ??= await Playwright.CreateAsync();
+                var headedBrowser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+                {
+                    Headless = false,
+                    SlowMo = 100,
+                    Args = new[]
+                    {
+                        "--no-sandbox",
+                        "--disable-setuid-sandbox",
+                        "--disable-dev-shm-usage",
+                        "--no-first-run",
+                        "--no-default-browser-check",
+                        "--disable-default-apps",
+                        "--disable-blink-features=AutomationControlled"
+                    }
+                });
+                return headedBrowser;
             }
             finally
             {
